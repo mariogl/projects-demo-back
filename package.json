@@ -10,7 +10,8 @@
     "start": "node .",
     "start:dev": "nodemon -q .",
     "test": "jest",
-    "test:dev": "jest --watchAll"
+    "test:dev": "jest --watchAll",
+    "test:coverage": "jest --coverage --watchAll=false"
   },
   "keywords": [],
   "author": "",

@@ -1,27 +1,18 @@
 import express from "express";
 import morgan from "morgan";
-import cors from "cors";
-import allowedOrigins from "./allowedOrigins.js";
 import { generalError, notFoundError } from "./middlewares/errors.js";
-import { partialPaths } from "./paths.js";
+import { partialPaths, uploadsPath } from "./paths.js";
 import usersRouter from "./routers/usersRouter.js";
+import corsMiddleware from "./cors/cors.js";
+import { ping } from "./middlewares/ping.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin(requestOrigin, callback) {
-      if (!requestOrigin || allowedOrigins.includes(requestOrigin)) {
-        callback(null, requestOrigin);
-        return;
-      }
-
-      callback(new Error("CORS error"));
-    },
-  })
-);
+app.use(corsMiddleware);
 app.use(morgan("dev"));
+app.use(express.static(uploadsPath));
 
+app.get("/", ping);
 app.use(partialPaths.users.base, usersRouter);
 
 app.use(notFoundError);

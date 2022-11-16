@@ -38,9 +38,8 @@ export const generalError = (
 
   const statusCode = error.statusCode || 500;
   const publicMessage =
-    error.publicMessage || error instanceof ValidationError
-      ? "Wrong data"
-      : "General error";
+    error.publicMessage ||
+    (error instanceof ValidationError ? "Wrong data" : "General error");
 
   res.status(statusCode).json({ error: publicMessage });
 };

@@ -1,15 +1,9 @@
 import type { Response, Request } from "express";
-import mongoose from "mongoose";
+import { MongoServerError } from "mongodb";
 import User from "../../database/models/User";
-import type { BodyWithUserData } from "../types";
+import CustomError from "../../errors/CustomError";
+import type { CustomRequest } from "../types";
 import { createUser } from "./usersControllers";
-
-interface CustomRequest
-  extends Partial<
-    Request<Record<string, unknown>, Record<string, unknown>, BodyWithUserData>
-  > {
-  file: Express.Multer.File;
-}
 
 const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
@@ -67,8 +61,14 @@ describe("Given an createUser controller", () => {
   });
 
   describe("When it receives an existent username 'marta' and a next function", () => {
-    test("Then it should call next function with a 500 'Error creating the user' error", async () => {
-      const expectedErrorMessage = "Error creating the user";
+    test("Then it should call next function with a 409 'User already exists' error", async () => {
+      const expectedErrorMessage = "User already exists";
+      const mongoServerError = new MongoServerError({});
+      const expectedError = new CustomError(
+        expectedErrorMessage,
+        expectedErrorMessage,
+        409
+      );
       const req: CustomRequest = {
         body: {
           username: "marta",
@@ -90,13 +90,11 @@ describe("Given an createUser controller", () => {
       };
       const next = jest.fn();
 
-      User.create = jest
-        .fn()
-        .mockRejectedValue(new mongoose.Error(expectedErrorMessage));
+      User.create = jest.fn().mockRejectedValue(mongoServerError);
 
       await createUser(req as Request, res as Response, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

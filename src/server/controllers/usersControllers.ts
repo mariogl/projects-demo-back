@@ -1,15 +1,12 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
+import { MongoServerError } from "mongodb";
 import bcrypt from "bcryptjs";
 import User from "../../database/models/User.js";
-import type { BodyWithUserData } from "../types";
+import type { CustomRequest } from "../types";
 import CustomError from "../../errors/CustomError.js";
 
 export const createUser = async (
-  req: Request<
-    Record<string, unknown>,
-    Record<string, unknown>,
-    BodyWithUserData
-  >,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -22,11 +19,20 @@ export const createUser = async (
       username,
       password: hashedPassword,
       email,
-      avatar: "mi-cara.jpg",
+      avatar: req.newFilename,
     });
 
     res.status(201).json({ username: newUser.username });
   } catch (error: unknown) {
+    if (error instanceof MongoServerError) {
+      const customError = new CustomError(
+        "User already exists",
+        "User already exists",
+        409
+      );
+      next(customError);
+    }
+
     const customError = new CustomError(
       (error as Error).message,
       "Error creating the user",
