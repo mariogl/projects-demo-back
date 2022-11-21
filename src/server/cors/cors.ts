@@ -1,6 +1,6 @@
 import cors from "cors";
-
-const allowedOrigins = ["http://localhost:3000"];
+import CustomError from "../../errors/CustomError";
+import allowedOrigins from "../allowedOrigins";
 
 const corsMiddleware = cors({
   origin(requestOrigin, callback) {
@@ -9,7 +9,7 @@ const corsMiddleware = cors({
       return;
     }
 
-    callback(new Error("CORS error"));
+    callback(new CustomError("CORS error", "CORS error", 401));
   },
 });
 

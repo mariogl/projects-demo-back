@@ -15,7 +15,7 @@ const handleUpload = async (
   const newFilename = buildFilename(file.originalname, file.filename);
 
   await fs.rename(
-    path.join(uploadsPath, file.filename),
+    path.join(uploadsPath, "tmp", file.filename),
     path.join(uploadsPath, newFilename)
   );
 

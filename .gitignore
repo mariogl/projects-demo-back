@@ -1,5 +1,6 @@
 node_modules/
 build/
 uploads/
+coverage/
 .DS_Store
 .env

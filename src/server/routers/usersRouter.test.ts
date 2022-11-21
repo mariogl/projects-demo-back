@@ -1,4 +1,5 @@
 import request from "supertest";
+import bcrypt from "bcryptjs";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app";
 import { paths, uploadsPath } from "../paths";
@@ -47,6 +48,54 @@ describe("Given a POST /user/register endpoint", () => {
         .expect(201);
 
       expect(response.body).toHaveProperty("username", userData.username);
+    });
+  });
+
+  describe("When it receives a request with an existent username 'marta'", () => {
+    test("Then it should respond with a 409 'User already exists' error", async () => {
+      const userData: UserData = {
+        username: "marta",
+        password: "12345678",
+        email: "marta@marta.com",
+      };
+
+      await User.create({
+        ...userData,
+        password: await bcrypt.hash(userData.password, 10),
+        avatar: "test",
+      });
+
+      const response = await request(app)
+        .post(paths.users.register)
+        .field("username", userData.username)
+        .field("password", userData.password)
+        .field("email", userData.email)
+        .attach("avatar", Buffer.from("test-avatar"), {
+          filename: `${mockNameStart}${mockNameEnd}`,
+        })
+        .expect(409);
+
+      expect(response.body).toHaveProperty("error", "User already exists");
+    });
+  });
+
+  describe("When it receives a request without password", () => {
+    test("Then it should respond with a 400 'Wrong data' error", async () => {
+      const userData: Partial<UserData> = {
+        username: "luis",
+        email: "luis@luis.com",
+      };
+
+      const response = await request(app)
+        .post(paths.users.register)
+        .field("username", userData.username)
+        .field("email", userData.email)
+        .attach("avatar", Buffer.from("test-avatar"), {
+          filename: `${mockNameStart}${mockNameEnd}`,
+        })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error", "Wrong data");
     });
   });
 });

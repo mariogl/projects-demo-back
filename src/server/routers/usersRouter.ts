@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { validate } from "express-validation";
 import multer from "multer";
 import { createUser } from "../controllers/usersControllers.js";
@@ -7,7 +8,7 @@ import { partialPaths, uploadsPath } from "../paths.js";
 import { userDataSchema } from "../schemas/usersSchemas.js";
 
 const upload = multer({
-  dest: uploadsPath,
+  dest: path.join(uploadsPath, "tmp"),
 });
 
 // eslint-disable-next-line new-cap
