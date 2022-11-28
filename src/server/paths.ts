@@ -4,12 +4,19 @@ export const partialPaths = {
     register: "/register",
     login: "/login",
   },
+  projects: {
+    base: "/projects",
+    create: "/create",
+  },
 };
 
 export const paths = {
   users: {
     register: `${partialPaths.users.base}${partialPaths.users.register}`,
     login: `${partialPaths.users.base}${partialPaths.users.login}`,
+  },
+  projects: {
+    create: `${partialPaths.projects.base}${partialPaths.projects.create}`,
   },
 };
 

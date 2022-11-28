@@ -6,13 +6,12 @@ export enum ErrorType {
   userExists,
   cors,
   endpointNotFound,
+  jwtNotFound,
+  jwtInvalid,
+  createProject,
 }
 
-const createCustomError = (
-  type: ErrorType,
-  privateErrorMessage?: string,
-  error?: Error
-) => {
+const createCustomError = (type: ErrorType, error?: Error) => {
   let publicErrorMessage: string;
   let errorStatusCode: number;
 
@@ -37,13 +36,25 @@ const createCustomError = (
       publicErrorMessage = "Endpoint not found";
       errorStatusCode = 404;
       break;
+    case ErrorType.jwtNotFound:
+      publicErrorMessage = "Missing token";
+      errorStatusCode = 401;
+      break;
+    case ErrorType.jwtInvalid:
+      publicErrorMessage = "Invalid token";
+      errorStatusCode = 401;
+      break;
+    case ErrorType.createProject:
+      publicErrorMessage = "Error creating the project";
+      errorStatusCode = 500;
+      break;
     default:
       publicErrorMessage = "General error";
       errorStatusCode = 500;
   }
 
   const customError = new CustomError(
-    privateErrorMessage ?? error.message,
+    error?.message || publicErrorMessage,
     publicErrorMessage,
     errorStatusCode
   );

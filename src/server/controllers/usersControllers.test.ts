@@ -1,7 +1,7 @@
 import type { Response, Request } from "express";
 import { MongoServerError } from "mongodb";
 import User from "../../database/models/User";
-import type { CustomRegisterRequest } from "../types";
+import type { CustomRegisterRequest } from "../types/requestTypes";
 import createCustomError, { ErrorType } from "../utils/errors";
 import { createUser } from "./usersControllers";
 

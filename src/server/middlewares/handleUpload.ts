@@ -3,7 +3,7 @@ import path from "path";
 import type { NextFunction, Response } from "express";
 import { uploadsPath } from "../paths.js";
 import { buildFilename } from "../utils/files.js";
-import type { CustomRegisterRequest } from "../types.js";
+import type { CustomRegisterRequest } from "../types/requestTypes.js";
 
 const handleUpload = async (
   req: CustomRegisterRequest,

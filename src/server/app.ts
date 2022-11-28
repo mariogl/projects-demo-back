@@ -5,6 +5,8 @@ import { partialPaths, uploadsPath } from "./paths.js";
 import usersRouter from "./routers/usersRouter.js";
 import corsMiddleware from "./cors/cors.js";
 import { ping } from "./middlewares/ping.js";
+import projectsRouter from "./routers/projectsRouter.js";
+import auth from "./middlewares/auth.js";
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(express.static(uploadsPath));
 
 app.get("/", ping);
 app.use(partialPaths.users.base, usersRouter);
+app.use(auth);
+app.use(partialPaths.projects.base, projectsRouter);
 
 app.use(notFoundError);
 app.use(generalError);

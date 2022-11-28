@@ -3,7 +3,10 @@ import { MongoServerError } from "mongodb";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../database/models/User.js";
-import type { CustomLoginRequest, CustomRegisterRequest } from "../types";
+import type {
+  CustomLoginRequest,
+  CustomRegisterRequest,
+} from "../types/requestTypes.js";
 import environment from "../../loadEnvironment.js";
 import createCustomError, { ErrorType } from "../utils/errors.js";
 
@@ -27,7 +30,7 @@ export const createUser = async (
     res.status(201).json({ username: newUser.username });
   } catch (error: unknown) {
     if (error instanceof MongoServerError) {
-      const customError = createCustomError(ErrorType.userExists, null, error);
+      const customError = createCustomError(ErrorType.userExists, error);
       next(customError);
       return;
     }
@@ -49,10 +52,7 @@ export const loginUser = async (
 
     if (user) {
       if (!(await bcrypt.compare(password, user.password))) {
-        const error = createCustomError(
-          ErrorType.auth,
-          "Passwords don't match"
-        );
+        const error = createCustomError(ErrorType.auth);
         throw error;
       }
 
@@ -66,7 +66,7 @@ export const loginUser = async (
       return;
     }
 
-    const error = createCustomError(ErrorType.auth, "User doesn't exist");
+    const error = createCustomError(ErrorType.auth);
     throw error;
   } catch (error: unknown) {
     next(error);

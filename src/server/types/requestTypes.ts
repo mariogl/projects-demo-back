@@ -1,13 +1,5 @@
 import type { Request } from "express";
-
-export interface UserCredentials {
-  username: string;
-  password: string;
-}
-
-export interface UserData extends UserCredentials {
-  email: string;
-}
+import type { ProjectData, UserCredentials, UserData } from "./types.js";
 
 export interface CustomRegisterRequest
   extends Partial<
@@ -19,3 +11,11 @@ export interface CustomRegisterRequest
 export type CustomLoginRequest = Partial<
   Request<Record<string, unknown>, Record<string, unknown>, UserCredentials>
 >;
+
+export type CustomCreateProjectRequest = Partial<
+  Request<Record<string, unknown>, Record<string, unknown>, ProjectData>
+>;
+
+export interface CustomUserIdRequest extends CustomCreateProjectRequest {
+  userId?: string;
+}

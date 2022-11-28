@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app";
 import { paths, uploadsPath } from "../paths";
-import type { UserData } from "../types";
+import type { UserData } from "../types/types";
 import connectDb from "../../database";
 import mongoose from "mongoose";
 import { deleteMockImages } from "../utils/files";
