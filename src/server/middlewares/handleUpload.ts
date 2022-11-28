@@ -3,10 +3,10 @@ import path from "path";
 import type { NextFunction, Response } from "express";
 import { uploadsPath } from "../paths.js";
 import { buildFilename } from "../utils/files.js";
-import type { CustomRequest } from "../types.js";
+import type { CustomRegisterRequest } from "../types.js";
 
 const handleUpload = async (
-  req: CustomRequest,
+  req: CustomRegisterRequest,
   res: Response,
   next: NextFunction
 ) => {

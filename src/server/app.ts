@@ -10,6 +10,7 @@ const app = express();
 
 app.use(corsMiddleware);
 app.use(morgan("dev"));
+app.use(express.json());
 app.use(express.static(uploadsPath));
 
 app.get("/", ping);

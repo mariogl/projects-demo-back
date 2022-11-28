@@ -1,8 +1,8 @@
 import type { Response, Request } from "express";
 import { MongoServerError } from "mongodb";
 import User from "../../database/models/User";
-import CustomError from "../../errors/CustomError";
-import type { CustomRequest } from "../types";
+import type { CustomRegisterRequest } from "../types";
+import createCustomError, { ErrorType } from "../utils/errors";
 import { createUser } from "./usersControllers";
 
 const res: Partial<Response> = {
@@ -16,7 +16,7 @@ beforeEach(() => {
 
 describe("Given an createUser controller", () => {
   describe("When it receives username 'luis' and password '1234' and a response", () => {
-    const req: CustomRequest = {
+    const req: CustomRegisterRequest = {
       body: {
         username: "luis",
         password: "1234",
@@ -62,14 +62,9 @@ describe("Given an createUser controller", () => {
 
   describe("When it receives an existent username 'marta' and a next function", () => {
     test("Then it should call next function with a 409 'User already exists' error", async () => {
-      const expectedErrorMessage = "User already exists";
       const mongoServerError = new MongoServerError({});
-      const expectedError = new CustomError(
-        expectedErrorMessage,
-        expectedErrorMessage,
-        409
-      );
-      const req: CustomRequest = {
+      const expectedError = createCustomError(ErrorType.userExists);
+      const req: CustomRegisterRequest = {
         body: {
           username: "marta",
           password: "1234",

@@ -2,8 +2,9 @@ import "../../loadEnvironment.js";
 import { ValidationError } from "express-validation";
 import debugCreator from "debug";
 import type { Request, Response, NextFunction } from "express";
-import CustomError from "../../errors/CustomError.js";
+import type CustomError from "../../errors/CustomError.js";
 import chalk from "chalk";
+import createCustomError, { ErrorType } from "../utils/errors.js";
 
 const debug = debugCreator("projects-back:server:middlewares:errors");
 
@@ -12,11 +13,7 @@ export const notFoundError = (
   res: Response,
   next: NextFunction
 ) => {
-  const error = new CustomError(
-    "Endpoint not found",
-    "Endpoint not found",
-    404
-  );
+  const error = createCustomError(ErrorType.endpointNotFound);
   next(error);
 };
 
