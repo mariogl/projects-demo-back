@@ -3,6 +3,7 @@ export const partialPaths = {
     base: "/users",
     register: "/register",
     login: "/login",
+    students: "/students",
   },
   projects: {
     base: "/projects",

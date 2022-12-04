@@ -1,4 +1,4 @@
-import type { NextFunction, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { MongoServerError } from "mongodb";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -58,6 +58,7 @@ export const loginUser = async (
 
       const userData = {
         id: user._id,
+        username: user.username,
       };
 
       const token = jwt.sign(userData, environment.tokenSecret);
@@ -71,4 +72,10 @@ export const loginUser = async (
   } catch (error: unknown) {
     next(error);
   }
+};
+
+export const getStudents = async (req: Request, res: Response) => {
+  const students = await User.find({ isStudent: true });
+
+  res.status(200).json({ students });
 };

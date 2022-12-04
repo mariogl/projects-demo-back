@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 import Project from "../../database/models/Project.js";
 import type { CustomUserIdRequest } from "../types/requestTypes.js";
 import createCustomError, { ErrorType } from "../utils/errors.js";
